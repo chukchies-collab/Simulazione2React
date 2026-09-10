@@ -79,14 +79,27 @@ export async function getShowSuggestions(query) {
  * @returns {Promise<Object>} Oggetto show esteso con _embedded
  */
 export async function getShowById(showId) {
-  // TODO 1: Usa l'id passato come argomento per recuperare i dettagli della serie, cast ed episodi.
-  // Prima controlla che l'id sia un numero intero positivo, altrimenti solleva un errore.
-  // Poi esegui tre fetch con la funzione requestJson:
-  // - una per i dettagli della serie (endpoint /shows/{id}) --> show
-  // - una per il cast (endpoint /shows/{id}/cast) --> cast
-  // - una per gli episodi (endpoint /shows/{id}/episodes) --> episodes
-  // Restituisci un oggetto che unisce i dettagli della serie con un campo _embedded che contiene cast ed episodi.
+  if (!Number.isInteger(showId) || Number(showId) <= 0) {
+    throw Error('Lid deve essere positivo e intero');
+  }
+  const show = await requestJson(`${API_BASE}/shows/${showId}`, 'error nella fetch dei dettagli');
+  const cast = await requestJson(`${API_BASE}/shows/${showId}/cast`, 'error nella fetch del cast');
+  const episodes = await requestJson(
+    `${API_BASE}/shows/${showId}/episodes`,
+    'error nella fetch degli episodes'
+  );
+  //   if (!Number.isInteger(showId) || showId <= 0) {
+  //     throw new Error("L'ID deve essere un numero intero positivo.");
+  //   }
 
+  //   // 2. Esecuzione delle richieste in parallelo con Promise.all
+  //   const [show, cast, episodes] = await Promise.all([
+  //     requestJson(`${API_BASE}/shows/${showId}`, 'Error'),
+  //     requestJson(`${API_BASE}/shows/${showId}/cast`, 'Error'),
+  //     requestJson(`${API_BASE}/shows/${showId}/episodes`, 'Error'),
+  //   ]);
+
+  //   // 3. Restituzione dell'oggetto combinato con la proprietà _embedded
   return {
     ...show,
     _embedded: {
@@ -95,3 +108,10 @@ export async function getShowById(showId) {
     },
   };
 }
+// TODO 1: Usa l'id passato come argomento per recuperare i dettagli della serie, cast ed episodi.
+// Prima controlla che l'id sia un numero intero positivo, altrimenti solleva un errore.
+// Poi esegui tre fetch con la funzione requestJson:
+// - una per i dettagli della serie (endpoint /shows/{id}) --> show
+// - una per il cast (endpoint /shows/{id}/cast) --> cast
+// - una per gli episodi (endpoint /shows/{id}/episodes) --> episodes
+// Restituisci un oggetto che unisce i dettagli della serie con un campo _embedded che contiene cast ed episodi.
