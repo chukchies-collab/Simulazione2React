@@ -33,6 +33,10 @@ function ShowCard({ show, titleOverride = '', compact = false, actions = null })
 
   return (
     <article className={`series-card${compact ? ' compact' : ''}`}>
+      <div className="series-title-block">
+        <h2>{title}</h2>
+        <p className="series-status"> {status}</p>
+      </div>
       {/* TODO 1: Manca da vedere l'header e i meta della serie.
           Per farlo mettiamo un div con classe "series-title-block" che contiene:
           - h2 per il titolo (variabile `title`)
@@ -41,7 +45,9 @@ function ShowCard({ show, titleOverride = '', compact = false, actions = null })
           - div con classe "temp-main" che mostra il rating (variabile `rating`)
           - div con classe "temp-desc" che mostra i generi formattati (variabile `genres`)
           - p con classe "show-summary" che mostra la summary ridotta (usa getSafeSummary(show)). */}
-      <div className="series-card-header">{actions ? <div className="series-actions">{actions}</div> : null}</div>
+      <div className="series-card-header">
+        {actions ? <div className="series-actions">{actions}</div> : null}
+      </div>
 
       <div className="series-current show-current">
         <div className="show-poster-wrap">
@@ -51,7 +57,11 @@ function ShowCard({ show, titleOverride = '', compact = false, actions = null })
             <div className="show-poster-placeholder">No image</div>
           )}
         </div>
-        <div className="series-meta show-meta"></div>
+        <div className="series-meta show-meta">
+          <div className="temp-main">{rating}</div>
+          <div className="temp-desc">{genres}</div>
+          <p className="show-summary">{getSafeSummary(show)}</p>
+        </div>
       </div>
 
       <div className="series-details-grid">
@@ -65,7 +75,9 @@ function ShowCard({ show, titleOverride = '', compact = false, actions = null })
         </div>
         <div className="detail-item">
           <span className="detail-label">Network</span>
-          <span className="detail-value">{show.network?.name || show.webChannel?.name || 'N/D'}</span>
+          <span className="detail-value">
+            {show.network?.name || show.webChannel?.name || 'N/D'}
+          </span>
         </div>
         <div className="detail-item">
           <span className="detail-label">Tipo</span>
